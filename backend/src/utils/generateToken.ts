@@ -1,0 +1,9 @@
+import jwt from 'jsonwebtoken';
+import { ENV } from '../config/env';
+import { JwtPayload } from '../types/auth.types';
+
+export const generateToken = (payload: JwtPayload): string => {
+  return jwt.sign(payload, ENV.JWT_SECRET, {
+    expiresIn: ENV.JWT_EXPIRES_IN,
+  } as jwt.SignOptions);
+};
