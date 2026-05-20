@@ -59,15 +59,20 @@ const DashboardPage = () => {
 
   const { user } = useAuth();
 
-  const { leads, meta, getLeads, isLoading } =
-    useLeads();
+  // ✅ FIXED
+  const {
+    leads,
+    total,
+    getLeads,
+    loading,
+  } = useLeads();
 
   useEffect(() => {
     getLeads({ page: 1, limit: 100 });
   }, []);
 
   const stats = {
-    total: meta?.total || 0,
+    total: total || 0,
 
     new: leads.filter(
       (l) => l.status === 'New'
@@ -82,7 +87,8 @@ const DashboardPage = () => {
     ).length,
   };
 
-  if (isLoading && leads.length === 0) {
+  // ✅ FIXED
+  if (loading && leads.length === 0) {
     return <Loader />;
   }
 
@@ -160,8 +166,9 @@ const DashboardPage = () => {
             Recent Leads
           </h2>
 
+          {/* ✅ FIXED */}
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={() => navigate('/leads')}
           >
