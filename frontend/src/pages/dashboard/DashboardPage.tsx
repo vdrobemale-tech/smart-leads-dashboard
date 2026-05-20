@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import {
   Users,
   UserCheck,
@@ -14,6 +15,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 import Loader from '../../components/common/Loader';
 import Button from '../../components/common/Button';
+
 import LeadStatusBadge from '../../components/leads/LeadStatusBadge';
 
 import { formatDate } from '../../utils/formatDate';
@@ -48,7 +50,9 @@ const StatCard = ({
       <div
         className={`w-12 h-12 ${bgColor} rounded-xl flex items-center justify-center`}
       >
-        <div className={color}>{icon}</div>
+        <div className={color}>
+          {icon}
+        </div>
       </div>
     </div>
   </div>
@@ -68,31 +72,43 @@ const DashboardPage = () => {
   } = useLeads();
 
   useEffect(() => {
-    getLeads({ page: 1, limit: 100 });
+    getLeads({
+      page: 1,
+      limit: 100,
+    });
   }, []);
 
   const stats = {
     total: total || 0,
 
     new: leads.filter(
-      (l) => l.status === 'New'
+      (l) => l.status === 'new'
     ).length,
 
     qualified: leads.filter(
-      (l) => l.status === 'Qualified'
+      (l) =>
+        l.status === 'qualified'
     ).length,
 
     lost: leads.filter(
-      (l) => l.status === 'Lost'
+      (l) => l.status === 'lost'
     ).length,
   };
 
   // ✅ FIXED
+<<<<<<< HEAD
   if (loading && leads.length === 0) {
+=======
+  if (
+    loading &&
+    leads.length === 0
+  ) {
+>>>>>>> 4db8117 (fixed build)
     return <Loader />;
   }
 
-  const recentLeads = leads.slice(0, 5);
+  const recentLeads =
+    leads.slice(0, 5);
 
   return (
     <div className="space-y-6">
@@ -101,21 +117,28 @@ const DashboardPage = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
             Welcome back,{' '}
-            {user?.name?.split(' ')[0]} 👋
+            {
+              user?.name?.split(
+                ' '
+              )[0]
+            }{' '}
+            👋
           </h1>
 
           <p className="text-sm text-gray-500 mt-1">
-            Here's what's happening with your
-            leads today.
+            Here's what's happening
+            with your leads today.
           </p>
         </div>
 
         <Button
           onClick={() =>
-            navigate('/leads/create')
+            navigate(
+              '/leads/create'
+            )
           }
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4 mr-2" />
           Add Lead
         </Button>
       </div>
@@ -125,7 +148,9 @@ const DashboardPage = () => {
         <StatCard
           title="Total Leads"
           value={stats.total}
-          icon={<Users className="w-6 h-6" />}
+          icon={
+            <Users className="w-6 h-6" />
+          }
           color="text-indigo-600"
           bgColor="bg-indigo-50"
         />
@@ -153,7 +178,9 @@ const DashboardPage = () => {
         <StatCard
           title="Lost Leads"
           value={stats.lost}
-          icon={<UserX className="w-6 h-6" />}
+          icon={
+            <UserX className="w-6 h-6" />
+          }
           color="text-red-600"
           bgColor="bg-red-50"
         />
@@ -170,61 +197,75 @@ const DashboardPage = () => {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/leads')}
+            onClick={() =>
+              navigate('/leads')
+            }
           >
             View All{' '}
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
         </div>
 
-        {recentLeads.length === 0 ? (
+        {recentLeads.length ===
+        0 ? (
           <div className="px-5 py-10 text-center">
             <p className="text-sm text-gray-500">
-              No leads found. Create your first
+              No leads found.
+              Create your first
               lead!
             </p>
           </div>
         ) : (
           <div className="divide-y divide-gray-50">
-            {recentLeads.map((lead) => (
-              <div
-                key={lead._id}
-                onClick={() =>
-                  navigate(`/leads/${lead._id}`)
-                }
-                className="flex items-center justify-between px-5 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-sm font-semibold">
-                      {lead.name
-                        .charAt(0)
-                        .toUpperCase()}
+            {recentLeads.map(
+              (lead) => (
+                <div
+                  key={lead._id}
+                  onClick={() =>
+                    navigate(
+                      `/leads/${lead._id}`
+                    )
+                  }
+                  className="flex items-center justify-between px-5 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-semibold">
+                        {lead.name
+                          .charAt(
+                            0
+                          )
+                          .toUpperCase()}
+                      </span>
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {lead.name}
+                      </p>
+
+                      <p className="text-xs text-gray-500 truncate">
+                        {lead.email}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 flex-shrink-0 ml-3">
+                    <LeadStatusBadge
+                      status={
+                        lead.status
+                      }
+                    />
+
+                    <span className="text-xs text-gray-400 hidden sm:block">
+                      {formatDate(
+                        lead.createdAt
+                      )}
                     </span>
                   </div>
-
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      {lead.name}
-                    </p>
-
-                    <p className="text-xs text-gray-500 truncate">
-                      {lead.email}
-                    </p>
-                  </div>
                 </div>
-
-                <div className="flex items-center gap-3 flex-shrink-0 ml-3">
-                  <LeadStatusBadge
-                    status={lead.status}
-                  />
-
-                  <span className="text-xs text-gray-400 hidden sm:block">
-                    {formatDate(lead.createdAt)}
-                  </span>
-                </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         )}
       </div>
