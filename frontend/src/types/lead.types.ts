@@ -1,5 +1,13 @@
-export type LeadStatus = 'New' | 'Contacted' | 'Qualified' | 'Lost';
-export type LeadSource = 'Website' | 'Instagram' | 'Referral';
+export type LeadStatus =
+  | 'new'
+  | 'contacted'
+  | 'qualified'
+  | 'lost';
+
+export type LeadSource =
+  | 'website'
+  | 'instagram'
+  | 'referral';
 
 export interface Lead {
   _id: string;
@@ -7,11 +15,13 @@ export interface Lead {
   email: string;
   status: LeadStatus;
   source: LeadSource;
+
   createdBy: {
     _id: string;
     name: string;
     email: string;
   };
+
   createdAt: string;
   updatedAt: string;
 }
