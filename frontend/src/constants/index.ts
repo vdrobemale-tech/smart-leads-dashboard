@@ -12,19 +12,19 @@ export const LEAD_STATUSES: {
 }[] = [
   {
     label: 'New',
-    value: 'new',
+    value: 'New',
   },
   {
     label: 'Contacted',
-    value: 'contacted',
+    value: 'Contacted',
   },
   {
     label: 'Qualified',
-    value: 'qualified',
+    value: 'Qualified',
   },
   {
     label: 'Lost',
-    value: 'lost',
+    value: 'Lost',
   },
 ];
 
@@ -34,11 +34,15 @@ export const LEAD_SOURCES: {
 }[] = [
   {
     label: 'Website',
-    value: 'website',
+    value: 'Website',
+  },
+  {
+    label: 'Instagram',
+    value: 'Instagram',
   },
   {
     label: 'Referral',
-    value: 'referral',
+    value: 'Referral',
   },
 ];
 
