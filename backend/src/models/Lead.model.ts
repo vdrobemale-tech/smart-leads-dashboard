@@ -1,80 +1,147 @@
-export type LeadStatus =
-  | 'New'
-  | 'Contacted'
-  | 'Qualified'
-  | 'Lost';
+import mongoose, {
+  Document,
+  Schema,
+} from 'mongoose';
 
-export type LeadSource =
-  | 'Website'
-  | 'Instagram'
-  | 'Referral';
-
-export interface Lead {
-  _id: string;
+export interface ILead
+  extends Document {
   name: string;
   email: string;
   phone?: string;
   company?: string;
-  status: LeadStatus;
-  source: LeadSource;
+
+  status:
+    | 'New'
+    | 'Contacted'
+    | 'Qualified'
+    | 'Lost';
+
+  source:
+    | 'Website'
+    | 'Instagram'
+    | 'Referral';
+
   notes?: string;
 
-  createdBy: {
-    _id: string;
-    name: string;
-    email: string;
-  };
+  createdBy: mongoose.Types.ObjectId;
 
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface CreateLeadInput {
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  notes?: string;
-  status?: LeadStatus;
-  source: LeadSource;
-}
+const LeadSchema =
+  new Schema<ILead>(
+    {
+      name: {
+        type: String,
+        required: [
+          true,
+          'Name is required',
+        ],
+        trim: true,
+        maxlength: [
+          100,
+          'Name cannot exceed 100 characters',
+        ],
+      },
 
-export interface UpdateLeadInput {
-  name?: string;
-  email?: string;
-  phone?: string;
-  company?: string;
-  notes?: string;
-  status?: LeadStatus;
-  source?: LeadSource;
-}
+      email: {
+        type: String,
+        required: [
+          true,
+          'Email is required',
+        ],
+        lowercase: true,
+        trim: true,
+        match: [
+          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+          'Please enter a valid email',
+        ],
+      },
 
-export interface LeadFilters {
-  status?: LeadStatus | '';
-  source?: LeadSource | '';
-  search?: string;
-  sort?: 'latest' | 'oldest';
-  page?: number;
-  limit?: number;
-}
+      phone: {
+        type: String,
+        trim: true,
+        default: '',
+      },
 
-export interface PaginationMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
+      company: {
+        type: String,
+        trim: true,
+        default: '',
+        maxlength: [
+          100,
+          'Company name too long',
+        ],
+      },
 
-export interface LeadsResponse {
-  leads: Lead[];
-  meta: PaginationMeta;
-}
+      status: {
+        type: String,
+        enum: [
+          'New',
+          'Contacted',
+          'Qualified',
+          'Lost',
+        ],
+        default: 'New',
+        required: [
+          true,
+          'Status is required',
+        ],
+      },
 
-export interface LeadState {
-  leads: Lead[];
-  selectedLead: Lead | null;
-  meta: PaginationMeta | null;
-  filters: LeadFilters;
-  isLoading: boolean;
-  error: string | null;
-}
+      source: {
+        type: String,
+        enum: [
+          'Website',
+          'Instagram',
+          'Referral',
+        ],
+        required: [
+          true,
+          'Source is required',
+        ],
+      },
+
+      notes: {
+        type: String,
+        trim: true,
+        default: '',
+        maxlength: [
+          2000,
+          'Notes cannot exceed 2000 characters',
+        ],
+      },
+
+      createdBy: {
+        type:
+          Schema.Types
+            .ObjectId,
+        ref: 'User',
+        required: [
+          true,
+          'User ID is required',
+        ],
+      },
+    },
+    {
+      timestamps: true,
+    }
+  );
+
+LeadSchema.index({
+  createdAt: -1,
+});
+
+LeadSchema.index({
+  email: 1,
+});
+
+LeadSchema.index({
+  status: 1,
+});
+
+export default mongoose.model<ILead>(
+  'Lead',
+  LeadSchema
+);
