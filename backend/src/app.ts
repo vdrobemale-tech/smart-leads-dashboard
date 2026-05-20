@@ -17,6 +17,12 @@ app.get('/health', (req: Request, res: Response) => {
     message: 'Server is running',
   });
 });
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: "Smart Leads Backend Running 🚀"
+  });
+});
 
 // Routes
 app.use('/api/v1', routes);
