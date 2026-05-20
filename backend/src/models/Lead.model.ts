@@ -1,92 +1,80 @@
-import mongoose, { Document, Schema } from 'mongoose';
+export type LeadStatus =
+  | 'New'
+  | 'Contacted'
+  | 'Qualified'
+  | 'Lost';
 
-// 🔴 UPDATED Interface - Naye Fields Add Kiye
-export interface ILead extends Document {
+export type LeadSource =
+  | 'Website'
+  | 'Instagram'
+  | 'Referral';
+
+export interface Lead {
+  _id: string;
   name: string;
   email: string;
-  phone?: string;         // ✅ Add kiya
-  company?: string;       // ✅ Add kiya
-  status: 'New' | 'Contacted' | 'Qualified' | 'Lost';
-  source: 'Website' | 'Instagram' | 'Referral';
-  notes?: string;         // ✅ Add kiya
-  createdBy: mongoose.Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
+  phone?: string;
+  company?: string;
+  status: LeadStatus;
+  source: LeadSource;
+  notes?: string;
+
+  createdBy: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+
+  createdAt: string;
+  updatedAt: string;
 }
 
-const LeadSchema = new Schema<ILead>(
-  {
-    // ✅ Name Field
-    name: {
-      type: String,
-      required: [true, 'Name is required'],
-      trim: true,
-      maxlength: [100, 'Name cannot exceed 100 characters'],
-    },
-    
-    // ✅ Email Field
-    email: {
-      type: String,
-      required: [true, 'Email is required'],
-      lowercase: true,
-      trim: true,
-      match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email'],
-    },
-    
-    // ✅ PHONE FIELD - NAYA ADD KIYA
-    phone: {
-      type: String,
-      trim: true,
-      default: null,
-      // required: false, // Optional rakha hai agar zaruri ho toh true karo
-    },
-    
-    // ✅ COMPANY FIELD - NAYA ADD KIYA
-    company: {
-      type: String,
-      trim: true,
-      default: null,
-      maxlength: [100, 'Company name too long'],
-    },
+export interface CreateLeadInput {
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  notes?: string;
+  status?: LeadStatus;
+  source: LeadSource;
+}
 
-    // ✅ STATUS FIELD - FIXED ENUMS
-    status: {
-      type: String,
-      enum: ['New', 'Contacted', 'Qualified', 'Lost'], // ✅ Capital letters exactly
-      default: 'New',
-      required: [true, 'Status is required'],
-    },
+export interface UpdateLeadInput {
+  name?: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  notes?: string;
+  status?: LeadStatus;
+  source?: LeadSource;
+}
 
-    // ✅ SOURCE FIELD - FIXED ENUMS  
-    source: {
-      type: String,
-      enum: ['Website', 'Instagram', 'Referral'], // ✅ Exact match with frontend
-      required: [true, 'Source is required'],
-    },
+export interface LeadFilters {
+  status?: LeadStatus | '';
+  source?: LeadSource | '';
+  search?: string;
+  sort?: 'latest' | 'oldest';
+  page?: number;
+  limit?: number;
+}
 
-    // ✅ NOTES FIELD - NAYA ADD KIYA
-    notes: {
-      type: String,
-      trim: true,
-      default: '',
-      maxlength: [2000, 'Notes cannot exceed 2000 characters'],
-    },
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
-    // ✅ Created By (User Reference)
-    createdBy: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'User ID is required'],
-    },
-  },
-  { 
-    timestamps: true // ✅ Auto createdAt & updatedAt
-  }
-);
+export interface LeadsResponse {
+  leads: Lead[];
+  meta: PaginationMeta;
+}
 
-// Indexes for faster queries
-LeadSchema.index({ createdAt: -1 });
-LeadSchema.index({ email: 1 });
-LeadSchema.index({ status: 1 });
-
-export default mongoose.model<ILead>('Lead', LeadSchema);
+export interface LeadState {
+  leads: Lead[];
+  selectedLead: Lead | null;
+  meta: PaginationMeta | null;
+  filters: LeadFilters;
+  isLoading: boolean;
+  error: string | null;
+}
