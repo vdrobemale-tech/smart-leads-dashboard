@@ -63,7 +63,6 @@ const DashboardPage = () => {
 
   const { user } = useAuth();
 
-  // ✅ FIXED
   const {
     leads,
     total,
@@ -95,15 +94,10 @@ const DashboardPage = () => {
     ).length,
   };
 
-  // ✅ FIXED
-<<<<<<< HEAD
-  if (loading && leads.length === 0) {
-=======
   if (
     loading &&
     leads.length === 0
   ) {
->>>>>>> 4db8117 (fixed build)
     return <Loader />;
   }
 
@@ -193,7 +187,6 @@ const DashboardPage = () => {
             Recent Leads
           </h2>
 
-          {/* ✅ FIXED */}
           <Button
             variant="secondary"
             size="sm"
@@ -206,8 +199,7 @@ const DashboardPage = () => {
           </Button>
         </div>
 
-        {recentLeads.length ===
-        0 ? (
+        {recentLeads.length === 0 ? (
           <div className="px-5 py-10 text-center">
             <p className="text-sm text-gray-500">
               No leads found.
@@ -232,9 +224,7 @@ const DashboardPage = () => {
                     <div className="w-9 h-9 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-semibold">
                         {lead.name
-                          .charAt(
-                            0
-                          )
+                          .charAt(0)
                           .toUpperCase()}
                       </span>
                     </div>

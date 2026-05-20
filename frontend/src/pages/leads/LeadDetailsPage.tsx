@@ -22,7 +22,7 @@ import {
 
 import { useLeads } from '../../hooks/useLeads';
 
-import { useAuthContext } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 import { LEAD_SOURCES } from '../../constants';
 
@@ -48,7 +48,7 @@ const LeadDetailsPage = () => {
   const navigate = useNavigate();
 
   const { user } =
-    useAuthContext();
+    useAuth();
 
   const {
     lead,
@@ -81,20 +81,15 @@ const LeadDetailsPage = () => {
     async () => {
       if (!id) return;
 
-      const result =
+      try {
         await removeLead(id);
 
-      if (
-        result.meta
-          .requestStatus ===
-        'fulfilled'
-      ) {
         toast.success(
           'Lead deleted successfully'
         );
 
         navigate('/leads');
-      } else {
+      } catch {
         toast.error(
           'Failed to delete lead'
         );
