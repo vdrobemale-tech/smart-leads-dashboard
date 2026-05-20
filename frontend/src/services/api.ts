@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_TOKEN_KEY } from '../utils/constants';
 
 const api = axios.create({
   // 🔴 FIX: Direct URL daal diya hai ab - environment variable hataya
-  baseURL: 'http://localhost:5000/api/v1',
+  baseURL: 'https://smart-leads-dashboard-9tzd.onrender.com/api/v1',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
